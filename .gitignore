@@ -5,3 +5,7 @@ __pycache__/
 
 # Datos (evita subir los CSV crudos al repositorio)
 data/*.csv
+
+# Ignorar metadatos de Windows / Alternate Data Streams
+*:Zone.Identifier
+*Zone.Identifier
