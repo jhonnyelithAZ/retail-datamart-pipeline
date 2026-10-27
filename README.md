@@ -3,6 +3,8 @@
 ## Overview
 An enterprise-grade, idempotent ETL pipeline built with **Apache Airflow**, **Python (Pandas/NumPy)**, **PostgreSQL (Data Warehouse)**, and **Docker Compose**. The system extracts, normalizes, deduplicates, and loads multi-source retail datasets into a high-performance Star Schema optimized for analytical querying and business intelligence.
 
+* **GitHub Repository**: [https://github.com/jhonnyelithAZ/retail-datamart-pipeline.git](https://github.com/jhonnyelithAZ/retail-datamart-pipeline.git)
+
 ---
 
 ## Architecture & Data Model
@@ -43,10 +45,11 @@ datamart-etl/
 │   ├── data.csv                 # Daily transaction dataset
 │   └── online_retail.csv        # Historical retail dataset
 ├── docs/
-│   └── diagrama_datamart.png    # ER Diagram / Star Schema visualization
+│   ├── diagrama_datamart.png    # ER Diagram / Star Schema visualization
+│   └── technical_decisions.md   # Deep-dive architectural decisions and solutions
 ├── sql/
 │   ├── init.sql                 # Database schema initialization script
-│   └── business_queries.sql     # Analytical SQL queries for business reporting
+│   └── business_queries.sql     # Business Intelligence and analytical SQL queries
 ├── .env                         # Environment variables (AIRFLOW_UID)
 ├── docker-compose.yml           # Multi-container orchestration (Airflow + PostgreSQL DW)
 └── README.md                    # Project documentation
@@ -56,7 +59,11 @@ datamart-etl/
 
 ## Prerequisites & Installation (Under 10 Minutes)
 
-1. **Clone the repository** and navigate into the project root directory.
+1. **Clone the repository** and navigate into the project root directory:
+   ```bash
+   git clone https://github.com/jhonnyelithAZ/retail-datamart-pipeline.git
+   cd datamart-etl
+   ```
 2. Ensure **Docker** and **Docker Compose** are installed and running on your system.
 3. Place your raw datasets (`data.csv` and `online_retail.csv`) inside the `data/` directory.
 4. Create a `.env` file in the root folder with your local UID configuration:
@@ -81,12 +88,19 @@ datamart-etl/
 
 ---
 
-## Database Verification & Business Queries
+## Database Verification & Business Intelligence
 
-To inspect the loaded data or run analytical reports directly from your terminal:
+To inspect the loaded data or run analytical reports directly from your terminal against the PostgreSQL data warehouse:
 
 ```bash
 docker exec -it datamart-etl-postgres-dw-1 psql -U dw_user -d datamart_dw
+```
+
+### Analytical & Reporting Queries (`sql/business_queries.sql`)
+You can execute the complete suite of predefined business intelligence queries (covering revenue by country, top products, customer lifetime value, monthly trends, and data quality audit logs) directly from your host terminal:
+
+```bash
+docker exec -i datamart-etl-postgres-dw-1 psql -U dw_user -d datamart_dw < sql/business_queries.sql
 ```
 
 ### Quick Validation Queries:
