@@ -64,15 +64,19 @@ retail-datamart-pipeline/
    cd retail-datamart-pipeline
    ```
 2. Ensure **Docker** and **Docker Compose** are installed and running on your system.
-3. **Prepare the Data (Extraction)**:
-   Due to GitHub's file size limits and Data Engineering best practices, the heavy raw CSV files are versioned inside a compressed archive (`raw_data.zip`) located in the `data/` folder. 
-   
-   Before running containers, extract the dataset so the pipeline can read it:
-   ```bash
-   cd data/
-   unzip raw_data.zip
-   cd ..
-   ```
+
+3. Prepare the Data (Extraction)
+Due to GitHub's file size limits and Data Engineering best practices, the raw CSV files are not directly versioned. Instead, a compressed file (`raw_data.zip`) is provided inside the `data/` folder.
+
+Before spinning up the containers, **you must extract the datasets**:
+1. Navigate to the `data/` folder.
+2. Unzip the `raw_data.zip` file.
+3. Ensure both `data.csv` and `online_retail.csv` are extracted directly inside the `data/` directory.
+
+If `unzip` is not installed on your system (common in fresh Ubuntu/WSL environments), install it first:
+```bash
+sudo apt update && sudo apt install unzip -y
+```
    *(Note: The project's `.gitignore` is configured to automatically ignore any extracted `.csv` files in this folder, ensuring your version control remains clean).*
 
 4. Create a `.env` file in the root folder with your local UID configuration (preventing volume permission issues):
