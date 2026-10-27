@@ -1,0 +1,35 @@
+[2026-10-27T12:26:18.306+0000] {taskinstance.py:1159} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: datamart_etl_pipeline.load_facts manual__2026-10-27T12:25:33.442173+00:00 [queued]>
+[2026-10-27T12:26:18.311+0000] {taskinstance.py:1159} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: datamart_etl_pipeline.load_facts manual__2026-10-27T12:25:33.442173+00:00 [queued]>
+[2026-10-27T12:26:18.311+0000] {taskinstance.py:1361} INFO - Starting attempt 1 of 1
+[2026-10-27T12:26:18.318+0000] {taskinstance.py:1382} INFO - Executing <Task(_PythonDecoratedOperator): load_facts> on 2026-10-27 12:25:33.442173+00:00
+[2026-10-27T12:26:18.323+0000] {standard_task_runner.py:57} INFO - Started process 583 to run task
+[2026-10-27T12:26:18.325+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'datamart_etl_pipeline', 'load_facts', 'manual__2026-10-27T12:25:33.442173+00:00', '--job-id', '10', '--raw', '--subdir', 'DAGS_FOLDER/etl_datamart.py', '--cfg-path', '/tmp/tmpd7iv5f5e']
+[2026-10-27T12:26:18.327+0000] {standard_task_runner.py:85} INFO - Job 10: Subtask load_facts
+[2026-10-27T12:26:18.360+0000] {task_command.py:416} INFO - Running <TaskInstance: datamart_etl_pipeline.load_facts manual__2026-10-27T12:25:33.442173+00:00 [running]> on host 48b8cbfdf151
+[2026-10-27T12:26:18.410+0000] {taskinstance.py:1662} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='datamart_etl_pipeline' AIRFLOW_CTX_TASK_ID='load_facts' AIRFLOW_CTX_EXECUTION_DATE='2026-10-27T12:25:33.442173+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-10-27T12:25:33.442173+00:00'
+[2026-10-27T12:26:18.412+0000] {crypto.py:82} WARNING - empty cryptography key - values will not be stored encrypted.
+[2026-10-27T12:26:18.412+0000] {base.py:73} INFO - Using connection ID 'POSTGRES_DW' for task execution.
+[2026-10-27T12:26:18.824+0000] {logging_mixin.py:154} WARNING - /opt/***/dags/etl_datamart.py:91 DtypeWarning: Columns (0) have mixed types. Specify dtype option on import or set low_memory=False.
+[2026-10-27T12:26:19.376+0000] {taskinstance.py:1937} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/decorators/base.py", line 221, in execute
+    return_value = super().execute(context)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 192, in execute
+    return_value = self.execute_callable()
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/python.py", line 209, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+  File "/opt/airflow/dags/etl_datamart.py", line 94, in load_facts
+    execute_values(cursor, """
+  File "/home/airflow/.local/lib/python3.8/site-packages/psycopg2/extras.py", line 1299, in execute_values
+    cur.execute(b''.join(parts))
+psycopg2.errors.SyntaxError: INSERT has more expressions than target columns
+LINE 3: ...1 08:26:00+00:00',2.55,'17850.0','United Kingdom',15.3),(536...
+                                                             ^
+
+[2026-10-27T12:26:19.383+0000] {taskinstance.py:1400} INFO - Marking task as FAILED. dag_id=datamart_etl_pipeline, task_id=load_facts, execution_date=20261027T122533, start_date=20261027T122618, end_date=20261027T122619
+[2026-10-27T12:26:19.391+0000] {standard_task_runner.py:104} ERROR - Failed to execute job 10 for task load_facts (INSERT has more expressions than target columns
+LINE 3: ...1 08:26:00+00:00',2.55,'17850.0','United Kingdom',15.3),(536...
+                                                             ^
+; 583)
+[2026-10-27T12:26:19.422+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 1
+[2026-10-27T12:26:19.432+0000] {taskinstance.py:2778} INFO - 0 downstream tasks scheduled from follow-on schedule check

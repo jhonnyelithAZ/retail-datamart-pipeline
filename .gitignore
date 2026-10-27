@@ -1,0 +1,7 @@
+# Entorno
+.env
+__pycache__/
+*.pyc
+
+# Datos (evita subir los CSV crudos al repositorio)
+data/*.csv

@@ -1,0 +1,105 @@
+# DataMart ETL Pipeline
+
+## Overview
+An enterprise-grade, idempotent ETL pipeline built with **Apache Airflow**, **Python (Pandas/NumPy)**, **PostgreSQL (Data Warehouse)**, and **Docker Compose**. The system extracts, normalizes, deduplicates, and loads multi-source retail datasets into a high-performance Star Schema optimized for analytical querying and business intelligence.
+
+---
+
+## Architecture & Data Model
+The Data Warehouse follows a dimensional **Star Schema** designed to separate business events, customer demographics, product catalogs, and data quality logs:
+
+* **`dim_customers`**: Unique customer records with standardized customer types (`Registered` vs `UNKNOWN`).
+* **`dim_products`**: Product catalog featuring canonical uppercase descriptions grouped by `StockCode`.
+* **`fact_sales`**: Financial transactions where quantity > 0, complete with calculated `GrossRevenue`.
+* **`fact_returns`**: Returned items where quantity <= 0, capturing absolute return quantities and `ReturnAmount`.
+* **`log_rejections`**: Audit table isolating invalid records (e.g., unit price <= 0) for data quality tracking without breaking analytics.
+
+---
+
+## Key Technical Decisions & Robustness
+
+1. **Multi-Source Unification & Deduplication**:
+   - The pipeline ingests and merges two comprehensive datasets (daily operational dumps and historical data).
+   - Columns are dynamically normalized and overlapping date ranges are cleaned using composite subset deduplication (`InvoiceNo`, `StockCode`, `InvoiceDate`, `Quantity`) to prevent data inflation.
+
+2. **Idempotency**:
+   - Built with strict idempotency principles. Dimension tables utilize `ON CONFLICT DO NOTHING` on primary keys, and fact tables leverage composite unique keys (`invoice_no`, `product_code`, `invoice_date`/`return_date`), ensuring multiple DAG executions yield identical, non-duplicated states.
+
+3. **High-Performance Bulk Loading**:
+   - Leverages `psycopg2.extras.execute_values` for bulk inserts, reducing load times for hundreds of thousands of rows to under a minute.
+
+4. **Ambiguity Resolution**:
+   - Missing customer IDs are systematically mapped to `UNKNOWN` rather than dropped, preserving true financial totals.
+   - Product descriptions are standardized to uppercase with normalized spacing, keeping the first historical appearance as the canonical reference.
+
+---
+
+## Repository Structure
+```text
+datamart-etl/
+├── dags/
+│   └── etl_datamart.py          # Airflow DAG containing extract, transform, and load tasks
+├── data/
+│   ├── data.csv                 # Daily transaction dataset
+│   └── online_retail.csv        # Historical retail dataset
+├── docs/
+│   └── diagrama_datamart.png    # ER Diagram / Star Schema visualization
+├── sql/
+│   ├── init.sql                 # Database schema initialization script
+│   └── business_queries.sql     # Analytical SQL queries for business reporting
+├── .env                         # Environment variables (AIRFLOW_UID)
+├── docker-compose.yml           # Multi-container orchestration (Airflow + PostgreSQL DW)
+└── README.md                    # Project documentation
+```
+
+---
+
+## Prerequisites & Installation (Under 10 Minutes)
+
+1. **Clone the repository** and navigate into the project root directory.
+2. Ensure **Docker** and **Docker Compose** are installed and running on your system.
+3. Place your raw datasets (`data.csv` and `online_retail.csv`) inside the `data/` directory.
+4. Create a `.env` file in the root folder with your local UID configuration:
+   ```env
+   AIRFLOW_UID=50000
+   ```
+
+---
+
+## Running the Pipeline
+
+1. **Spin up the infrastructure** using Docker Compose:
+   ```bash
+   docker compose up -d
+   ```
+2. **Access the Airflow Web UI** in your browser at `http://localhost:8080`:
+   * **Username**: `admin`
+   * **Password**: `admin`
+3. Locate the `datamart_etl_pipeline` DAG in the dashboard.
+4. Toggle the switch to **Active** and click the **Trigger DAG (▶)** button.
+5. Monitor the task progression (`extract_and_transform` -> `load_dimensions` -> `load_facts`). All tasks will complete in green status within ~60 seconds.
+
+---
+
+## Database Verification & Business Queries
+
+To inspect the loaded data or run analytical reports directly from your terminal:
+
+```bash
+docker exec -it datamart-etl-postgres-dw-1 psql -U dw_user -d datamart_dw
+```
+
+### Quick Validation Queries:
+* **Total Sales Count**:
+  ```sql
+  SELECT COUNT(*) AS total_ventas FROM fact_sales;
+  ```
+* **Date Range Check (Historical + Daily Unification)**:
+  ```sql
+  SELECT MIN(invoice_date) AS primera_venta, MAX(invoice_date) AS ultima_venta FROM fact_sales;
+  ```
+
+---
+
+## ER Diagram (Star Schema)
+![DataMart ER Diagram](./docs/diagrama_datamart.png)

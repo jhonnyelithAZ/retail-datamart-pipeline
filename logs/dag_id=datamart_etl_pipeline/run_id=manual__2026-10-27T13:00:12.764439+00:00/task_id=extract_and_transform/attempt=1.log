@@ -1,0 +1,14 @@
+[2026-10-27T13:00:14.184+0000] {taskinstance.py:1159} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: datamart_etl_pipeline.extract_and_transform manual__2026-10-27T13:00:12.764439+00:00 [queued]>
+[2026-10-27T13:00:14.193+0000] {taskinstance.py:1159} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: datamart_etl_pipeline.extract_and_transform manual__2026-10-27T13:00:12.764439+00:00 [queued]>
+[2026-10-27T13:00:14.193+0000] {taskinstance.py:1361} INFO - Starting attempt 1 of 1
+[2026-10-27T13:00:14.201+0000] {taskinstance.py:1382} INFO - Executing <Task(_PythonDecoratedOperator): extract_and_transform> on 2026-10-27 13:00:12.764439+00:00
+[2026-10-27T13:00:14.206+0000] {standard_task_runner.py:57} INFO - Started process 1064 to run task
+[2026-10-27T13:00:14.210+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'datamart_etl_pipeline', 'extract_and_transform', 'manual__2026-10-27T13:00:12.764439+00:00', '--job-id', '28', '--raw', '--subdir', 'DAGS_FOLDER/etl_datamart.py', '--cfg-path', '/tmp/tmpjqii5wn0']
+[2026-10-27T13:00:14.212+0000] {standard_task_runner.py:85} INFO - Job 28: Subtask extract_and_transform
+[2026-10-27T13:00:14.245+0000] {task_command.py:416} INFO - Running <TaskInstance: datamart_etl_pipeline.extract_and_transform manual__2026-10-27T13:00:12.764439+00:00 [running]> on host 48b8cbfdf151
+[2026-10-27T13:00:14.296+0000] {taskinstance.py:1662} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='datamart_etl_pipeline' AIRFLOW_CTX_TASK_ID='extract_and_transform' AIRFLOW_CTX_EXECUTION_DATE='2026-10-27T13:00:12.764439+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-10-27T13:00:12.764439+00:00'
+[2026-10-27T13:00:14.778+0000] {logging_mixin.py:154} INFO - Faltan archivos CSV en la carpeta 'data/'. Asegúrate de tener data.csv y online_retail_II.csv.
+[2026-10-27T13:00:14.785+0000] {python.py:194} INFO - Done. Returned value was: None
+[2026-10-27T13:00:14.791+0000] {taskinstance.py:1400} INFO - Marking task as SUCCESS. dag_id=datamart_etl_pipeline, task_id=extract_and_transform, execution_date=20261027T130012, start_date=20261027T130014, end_date=20261027T130014
+[2026-10-27T13:00:14.824+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2026-10-27T13:00:14.843+0000] {taskinstance.py:2778} INFO - 1 downstream tasks scheduled from follow-on schedule check
